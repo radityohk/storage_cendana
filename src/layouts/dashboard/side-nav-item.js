@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link'; // Import Link from Next.js
 import { Box, Stack, SvgIcon, Typography } from '@mui/material';
 
 const SideNavItem = (props) => {
@@ -10,6 +11,37 @@ const SideNavItem = (props) => {
   if (children) {
     return (
       <li>
+        <Link href={path}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              p: 1,
+              '&:hover': {
+                backgroundColor: 'neutral.700',
+              },
+            }}
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              {icon && typeof icon === 'string' ? (
+                <SvgIcon component="img" src={icon} alt={title} color="white" />
+              ) : (
+                React.cloneElement(icon, { style: { color: 'white' } })
+              )}
+              <Typography variant="body2" color="white">
+                {title}
+              </Typography>
+            </Stack>
+          </Box>
+        </Link>
+      </li>
+    );
+  }
+
+  return (
+    <li>
+      <Link href={path}>
         <Box
           sx={{
             display: 'flex',
@@ -22,40 +54,17 @@ const SideNavItem = (props) => {
           }}
         >
           <Stack direction="row" spacing={1} alignItems="center">
-            {typeof icon === 'string' ? (
-              <SvgIcon component="img" src={icon} alt={title} />
+            {icon && typeof icon === 'string' ? (
+              <SvgIcon component="img" src={icon} alt={title} color="white" />
             ) : (
-              icon
+              icon && React.cloneElement(icon, { style: { color: 'white' } })
             )}
-            <Typography variant="body2">{title}</Typography>
+            <Typography variant="body2" color="white">
+              {title}
+            </Typography>
           </Stack>
         </Box>
-      </li>
-    );
-  }
-
-  return (
-    <li>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          cursor: 'pointer',
-          p: 1,
-          '&:hover': {
-            backgroundColor: 'neutral.700',
-          },
-        }}
-      >
-        <Stack direction="row" spacing={1} alignItems="center">
-          {typeof icon === 'string' ? (
-            <SvgIcon component="img" src={icon} alt={title} />
-          ) : (
-            icon
-          )}
-          <Typography variant="body2">{title}</Typography>
-        </Stack>
-      </Box>
+      </Link>
     </li>
   );
 };
