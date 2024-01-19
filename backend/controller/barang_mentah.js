@@ -1,8 +1,8 @@
-const bjadiModel = require(`../models/index`).bjadi;
+const bmentahModel = require(`../models/index`).bmentah;
 const Op = require(`sequelize`).Op;
 
-exports.getAllBjadi = async (request, response) => {
-    bjadiModel.findAll()
+exports.getAllBmentah = async (request, response) => {
+    bmentahModel.findAll()
     .then(result => {
         response.json({
             data: result
@@ -15,12 +15,12 @@ exports.getAllBjadi = async (request, response) => {
     })
 }
 
-exports.createBjadi = async (request, response) => {
+exports.createBmentah = async (request, response) => {
     let data = {
         nm_bjadi: request.body.nm_bjadi,
         jml_bjadi: request.body.jml_bjadi
     }
-    bjadiModel.create(data)
+    bmentahModel.create(data)
     .then(result => {
         response.json ({
             message: "Data berhasil ditambahkan",
