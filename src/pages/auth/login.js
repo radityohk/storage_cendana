@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
+import axios from 'axios';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router'; // Fix typo in import
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -23,26 +24,32 @@ const Page = () => {
   const router = useRouter();
   const auth = useAuth();
   const [method, setMethod] = useState('email');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
+      username: '',
+      password: '',
       submit: null
     },
     validationSchema: Yup.object({
-      email: Yup
+      username: Yup
         .string()
-        .email('Must be a valid email')
-        .max(255)
-        .required('Email is required'),
+        .required('Username is required'),
       password: Yup
         .string()
-        .max(255)
         .required('Password is required')
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
+        const response = await axios.get('http://localhost:8000/user/login', {
+          username: values.username,
+          password: values.password
+        });
+
+        // auth.signIn(response.data.username, response.data.token);
+
         router.push('/');
       } catch (err) {
         helpers.setStatus({ success: false });
@@ -136,26 +143,29 @@ const Page = () => {
               >
                 <Stack spacing={3}>
                   <TextField
-                    error={!!(formik.touched.email && formik.errors.email)}
                     fullWidth
-                    helperText={formik.touched.email && formik.errors.email}
-                    label="Email Address"
-                    name="email"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="email"
-                    value={formik.values.email}
+                    label="Username"
+                    name="username"
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                      setUsername(e.target.value);
+                    }}
+                    value={username}
+                    error={!!(formik.touched.username && formik.errors.username)}
+                    helperText={formik.touched.username && formik.errors.username}
                   />
                   <TextField
-                    error={!!(formik.touched.password && formik.errors.password)}
                     fullWidth
-                    helperText={formik.touched.password && formik.errors.password}
                     label="Password"
                     name="password"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                      setPassword(e.target.value);
+                    }}
                     type="password"
-                    value={formik.values.password}
+                    value={password}
+                    error={!!(formik.touched.password && formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
                   />
                 </Stack>
                 <FormHelperText sx={{ mt: 1 }}>

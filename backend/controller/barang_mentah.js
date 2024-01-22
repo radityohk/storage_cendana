@@ -17,8 +17,8 @@ exports.getAllBmentah = async (request, response) => {
 
 exports.createBmentah = async (request, response) => {
     let data = {
-        nm_bjadi: request.body.nm_bjadi,
-        jml_bjadi: request.body.jml_bjadi
+        nm_bmentah: request.body.nm_bmentah,
+        jml_bmentah: request.body.jml_bmentah
     }
     bmentahModel.create(data)
     .then(result => {
